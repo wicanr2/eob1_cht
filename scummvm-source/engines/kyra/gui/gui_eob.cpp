@@ -183,7 +183,13 @@ void EoBCoreEngine::gui_drawCharPortraitWithStats(int index, bool screenUpdt) {
 		if (_flags.lang == Common::ZH_TWN) {
 			_screen->fillRect(216, 5, 300, 33, g->colors.fill);
 			_screen->printShadedText(_characterGuiStringsHp[0], 214, 20, g->colors.guiColorDarkBlue, 0, 0);
-			_screen->printShadedText(_characterGuiStringsHp[3], 272, 20, g->colors.guiColorDarkBlue, 0, 0);
+			// Fix G2 (Bug B crash): _characterGuiStringsHp[3] is the "食" (food) label and only exists
+			// for EOB2 ZH (4-string provider). EOB1 ZH provider only has 2 strings; accessing [3]
+			// crashes (OOB read on Windows MinGW build, segfault when clicking portrait in-game).
+			// Gate the food-label draw to EOB2 ZH only — EOB1 ZH foregoes the inline food label
+			// (gui_drawFoodStatusGraph still renders the bar/graph below).
+			if (_flags.gameID == GI_EOB2)
+				_screen->printShadedText(_characterGuiStringsHp[3], 272, 20, g->colors.guiColorDarkBlue, 0, 0);
 		}
 
 		Screen::FontId cf = _screen->setFont(_invFont1);
@@ -214,8 +220,13 @@ void EoBCoreEngine::gui_drawCharPortraitWithStats(int index, bool screenUpdt) {
 					_screen->printShadedText(_characterGuiStringsSt[4], 235, statusTxtY, g->colors.guiColorLightRed, 0, g->colors.guiColorBlack);
 				else if (c->flags & 4)
 					_screen->printShadedText(_characterGuiStringsSt[5], 232, statusTxtY, g->colors.guiColorLightRed, 0, g->colors.guiColorBlack);
-				else if (c->flags & 8)
-					_screen->printShadedText(_characterGuiStringsSt[6], 232, statusTxtY, g->colors.guiColorLightRed, 0, g->colors.guiColorBlack);
+				else if (c->flags & 8) {
+					// Fix G2 (Bug B crash): _characterGuiStringsSt[6] only exists for EOB2 (7-string
+					// provider). EOB1 ZH provider has 6 strings; accessing [6] is OOB.
+					// EOB1 has no original 7th status string ("石化"), so skip when EOB1.
+					if (_flags.gameID == GI_EOB2)
+						_screen->printShadedText(_characterGuiStringsSt[6], 232, statusTxtY, g->colors.guiColorLightRed, 0, g->colors.guiColorBlack);
+				}
 			}
 
 			_screen->setFont(_invFont2);
@@ -422,7 +433,10 @@ void EoBCoreEngine::gui_drawHitpoints(int index) {
 		if (_flags.lang == Common::ZH_TWN) {
 			txtCol = g->colors.guiColorWhite;
 			if (_currentControlMode) {
-				tmpString = Common::String::format(_characterGuiStringsHp[2], c->hitPointsCur, c->hitPointsMax);
+				// Fix G2 (Bug B crash): _characterGuiStringsHp[2] is the inventory-mode HP format
+				// string and only exists for EOB2 ZH (4-string provider). EOB1 ZH provider has 2
+				// strings; accessing [2] is OOB. Fall back to [1] (which exists in both).
+				tmpString = Common::String::format(_flags.gameID == GI_EOB2 ? _characterGuiStringsHp[2] : _characterGuiStringsHp[1], c->hitPointsCur, c->hitPointsMax);
 				x -= 3;
 				y += 1;
 			} else {
@@ -1573,11 +1587,16 @@ GUI_EoB::GUI_EoB(EoBCoreEngine *vm) : GUI(vm), _vm(vm), _screen(vm ? vm->_screen
 	// The PC-98 versions of EOB I + II, the English Sega-CD version of EOB I and the Chinese version of EOB II allow small characters.
 	// For all other versions we convert to capital characters.
 	_textInputForceUppercase(vm && vm->_flags.platform != Common::kPlatformPC98 && vm->_flags.lang != Common::ZH_TWN && !(vm->_flags.platform == Common::kPlatformSegaCD && vm->_flags.lang != Common::EN_ANY)),
-	_textInputHeight(vm && vm->game() == GI_EOB2 && vm->gameFlags().lang == Common::Language::ZH_TWN ? 16 : 9),
-	_textInputShadowOffset(vm && vm->game() == GI_EOB2 && vm->gameFlags().lang == Common::Language::ZH_TWN ? 1 : 0),
-	_dlgButtonHeight1(vm && vm->game() == GI_EOB2 && vm->gameFlags().lang == Common::Language::ZH_TWN ? 16 : 14),
-	_dlgButtonHeight2(vm && vm->game() == GI_EOB2 && vm->gameFlags().lang == Common::Language::ZH_TWN ? 17 : 14),
-	_dlgButtonLabelYOffs(vm && vm->game() == GI_EOB2 && vm->gameFlags().lang == Common::Language::ZH_TWN ? 1 : 3) {
+	// iter5 BUG (大塊垂直黑塊覆蓋 input field): EOB1 ZH 走 EOB2 ZH chargen name-input path
+	// (chargen.cpp:772, lang==ZH_TWN gate 自 iter3 起放寬), 但這 5 個 input/dialog geometry
+	// 常數仍 gated to GI_EOB2 -> EOB1 ZH 用 FID_CHINESE_FNT 15-tall 字搭配 _textInputHeight=9
+	// 的 copyRegion 備份只蓋字頂 9 px, 字底 6 px 從未被 restore -> 累積黑色殘像看似大塊黑矩形.
+	// Fix: 對任一 EOB ZH_TWN 都套用 EOB2 ZH 的 input/dialog geometry.
+	_textInputHeight(vm && vm->gameFlags().lang == Common::Language::ZH_TWN ? 16 : 9),
+	_textInputShadowOffset(vm && vm->gameFlags().lang == Common::Language::ZH_TWN ? 1 : 0),
+	_dlgButtonHeight1(vm && vm->gameFlags().lang == Common::Language::ZH_TWN ? 16 : 14),
+	_dlgButtonHeight2(vm && vm->gameFlags().lang == Common::Language::ZH_TWN ? 17 : 14),
+	_dlgButtonLabelYOffs(vm && vm->gameFlags().lang == Common::Language::ZH_TWN ? 1 : 3) {
 
 	_menuStringsPrefsTemp = new char*[4]();
 	_saveSlotStringsTemp = new char*[6];

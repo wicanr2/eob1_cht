@@ -15,6 +15,14 @@
 !/win64-build/KYRA.DAT
 !/win64-build/ceob.pat
 
+# game/ subdir: ignore copyrighted EOB1 game files (EOB.EXE, EOBDATA*.PAK, EYE.PAK, OVL, FNT...)
+# Only commit our derivative + setup README
+/win64-build/game/*
+!/win64-build/game/KYRA.DAT
+!/win64-build/game/ceob.pat
+!/win64-build/game/README.md
+!/win64-build/game/.gitkeep
+
 # Test screenshots ARE committed — they're evidence of the bug-fix loop
 # (don't ignore /test-reports/**/*.png)
 

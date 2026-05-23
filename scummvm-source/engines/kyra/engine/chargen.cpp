@@ -601,7 +601,7 @@ void CharacterGenerator::drawButton(int index, int buttonState) {
 		return;
 	}
 
-	if (_vm->game() == GI_EOB2 && _vm->gameFlags().lang == Common::Language::ZH_TWN && _chineseButtonExtraData[index].type != -1) {
+	if (_vm->gameFlags().lang == Common::Language::ZH_TWN && _chineseButtonExtraData[index].type != -1) {
 		int mappedIdx = _chineseButtonExtraData[index].mapping;
 		int destX = _chargenButtonDefs[mappedIdx].x;
 		int destY = _chargenButtonDefs[mappedIdx].y;
@@ -769,7 +769,14 @@ void CharacterGenerator::createPartyMember() {
 					_vm->_gui->getTextInput(_characters[_activeBox].name, (_chargenBoxX[_activeBox] >> 3) - 1, _chargenBoxY[_activeBox] + 41, 7, 0xFF, 0x00, 0xFF);
 			} else {
 				if (!_vm->shouldQuit()) {
-					if (_vm->game() == GI_EOB2 && _vm->gameFlags().lang == Common::Language::ZH_TWN) {
+					if (_vm->gameFlags().lang == Common::Language::ZH_TWN) {
+						// BUG-013 fix: clear the input field strip to wipe leftover pixels from
+						// underlying race-sex/class draws. Both EOB1 and EOB2 ZH now use the same
+						// upper position (prompt 149,66 / input 19,81). EOB1 previously fell into
+						// the else branch with input at (24,100) and showed residual `類男` from
+						// `人類男` behind the field. Narrowed to x<150 so it does NOT wipe the
+						// stats grid which starts at x=165.
+						_screen->fillRect(15, 80, 145, 95, _vm->guiSettings()->colors.guiColorBlack);
 						_screen->printShadedText(_chargenStrings2[11], 149, 66, _vm->guiSettings()->colors.guiColorLightBlue, 0, _vm->guiSettings()->colors.guiColorBlack);
 						_vm->_gui->getTextInput(_characters[_activeBox].name, 19, 81, 8,
 									_vm->guiSettings()->colors.guiColorWhite, 0, _vm->guiSettings()->colors.guiColorDarkRed);
