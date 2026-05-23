@@ -34,7 +34,9 @@ start_xvfb() {
         return 0
     fi
     # +extension GLX is required even though we won't use GL — scummvm probes for it
-    Xvfb :$DISPLAY_NUM -screen 0 ${SCREEN_W}x${SCREEN_H}x24 +extension GLX >/tmp/eob1-tester/xvfb.log 2>&1 &
+    # -nolisten unix: WSLg mounts /tmp/.X11-unix read-only, so unix socket creation fails;
+    # without -nolisten unix Xvfb starts but scummvm hits "fatal IO error 0 (Success)" after ~653 X requests.
+    Xvfb :$DISPLAY_NUM -nolisten unix -screen 0 ${SCREEN_W}x${SCREEN_H}x24 +extension GLX >/tmp/eob1-tester/xvfb.log 2>&1 &
     XVFB_PID=$!
     echo "xvfb=$XVFB_PID" >> $PIDFILE
     sleep 1
