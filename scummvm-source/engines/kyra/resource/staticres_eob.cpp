@@ -1703,6 +1703,30 @@ const KyraRpgGUISettings EoBEngine::_guiSettingsVGA = {
 	{ 56, 5, 71, 122, 21, 9, 2, 1, 6, 73, 132, 44, 0, 0, 0, 0, 73, 168, 0, { 0x44, 0x62, 0x80, 0x90 }, { 0x82, 0x92, 0x98 } }
 };
 
+// Fix I: EOB1 ZH stats page layout. Clones _guiSettingsVGA but overrides statsPageCoords
+// with values borrowed from EOB2 _guiSettingsDOS_ZH (the upstream EOB2 Chinese fan translation,
+// shipped 7+ years, known-good). Engine routes here via eob.cpp guiSettings() ZH branch.
+// Without this, EOB1 ZH falls back to _guiSettingsVGA where statsStringsYInc=7 — 15-tall
+// CJK glyphs collapse into a single column, fully unreadable (user-reported in-game bug).
+const KyraRpgGUISettings EoBEngine::_guiSettingsVGA_ZH = {
+	{ _dlgButtonPosX_Def, _dlgButtonPosY_Def, 9, 15, false, 95, 9, 2, 7, { 285, 139 }, { 189, 162 }, { 31, 31 } },
+	{ 135, 130, 132, 180, 133, 17, 23, 20, 184, 177, 180, 184, 177, 180, 15, 6, 8, 9, 2, 11, 5, 4, 3, 1, 7, 12 },
+	{	{ 184, 256, -1}, { 2, 54, 106 }, 64, 50,
+		{ 8, 80, -1 }, { 11, 63, 115 }, { 181, -1, -1 }, { 3, -1, -1 },
+		{ 40, 112, -1 }, { 11, 27, 63, 79, 115, 131 },
+		{ 23, 95, -1}, { 46, 98, 150 }, 38, 3, { 250, 250, -1}, { 16, 25, -1 }, { 51, 51 }, 5,
+		2, 2, 2, 2, 13, 30
+	},
+	// statsPageCoords: borrowed from EOB2 _guiSettingsDOS_ZH (2-col, YInc=15 for 16x15 CJK)
+	{ 180, 37, 180, 36, 16, 180, 100, 261, 100, 15, 219, 104, 300, 104, 15, 180, 84, 236, 88, 254, 51, 270, 67, 0, 7, 287, 51, 301, 67, 0, 7, 180, 148, 38, 0 },
+	// statsPageColors: user-reported v1 (EOB1 VGA palette = 12 for labels) looked too
+	// dark on panel background. Switched all label slots to 15 (white) for readability.
+	// headLine/statsValues/acString/expLvl already 15. Now cls/race/alignment/statsStrings
+	// also 15 → all stats panel text uniformly white.
+	{ 15, { 15, 15, 15 }, 15, 15, 15, 15, 15, { 15, 15, 15 } },
+	{ 56, 5, 71, 122, 21, 9, 2, 1, 6, 73, 132, 44, 0, 0, 0, 0, 73, 168, 0, { 0x44, 0x62, 0x80, 0x90 }, { 0x82, 0x92, 0x98 } }
+};
+
 const KyraRpgGUISettings EoBEngine::_guiSettingsEGA = {
 	{ _dlgButtonPosX_Def, _dlgButtonPosY_Def, 9, 15, false, 95, 9, 2, 7, { 285, 139 }, { 189, 162 }, { 31, 31 } },
 	{ 13, 9, 2, 14, 2, 6, 13, 8, 13, 15, 14, 13, 15, 14, 15, 6, 8, 9, 2, 11, 5, 4, 3, 1, 7, 12 },

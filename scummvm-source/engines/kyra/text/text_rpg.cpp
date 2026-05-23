@@ -25,6 +25,7 @@
 #include "kyra/engine/timer.h"
 
 #include "common/system.h"
+#include "kyra/text/zh_substitute_eob.h"
 
 namespace Kyra {
 
@@ -565,6 +566,9 @@ void TextDisplayer_rpg::printDialogueText(int stringId, const char *pageBreakStr
 }
 
 void TextDisplayer_rpg::printDialogueText(const char *str, bool wait) {
+	// EOB1 ZH_TWN display-time substitution (same hook pattern as printMessage)
+	if (_vm->gameFlags().lang == Common::ZH_TWN)
+		str = zhSubstituteEoB(str);
 	assert(Common::strnlen(str, kEoBTextBufferSize) < kEoBTextBufferSize);
 	Common::strlcpy(_dialogueBuffer, str, kEoBTextBufferSize);
 
@@ -581,6 +585,12 @@ void TextDisplayer_rpg::printMessage(const char *str, int textColor, ...) {
 
 	if (textColor != -1)
 		_textDimData[_screen->curDimIndex()].color1= textColor;
+
+	// EOB1 ZH_TWN display-time substitution hook (Plan B5, u6-cht style).
+	// For LEVEL.INF script-embedded messages that cannot be in-place patched.
+	// Lookup returns input unchanged for non-EOB1 / non-ZH games or unmapped strings.
+	if (_vm->gameFlags().lang == Common::ZH_TWN)
+		str = zhSubstituteEoB(str);
 
 	va_list args;
 	va_start(args, textColor);

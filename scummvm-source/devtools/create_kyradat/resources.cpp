@@ -2658,6 +2658,12 @@ static const ResourceProvider resourceProviders[] = {
 	{ kEoBBasePryDoorStrings, kEoB1, kPlatformPC98, kNoSpecial, JA_JPN, &kEoB1PryDoorStringsPC98JapaneseProvider },
 	{ kEoBBaseWarningStrings, kEoB1, kPlatformPC98, kNoSpecial, JA_JPN, &kEoB1WarningStringsPC98JapaneseProvider },
 	{ kEoB1ItemNames, kEoB1, kPlatformPC98, kNoSpecial, JA_JPN, &kEoB1ItemNamesPC98JapaneseProvider },
+	// Fix J (iter7): DOS providers for item names. EN extracted from EOBDATA6.PAK/ITEM.DAT.
+	// DE/IT alias EN (EOB1 DOS DE/IT PAKs share English item names). ZH = new translations.
+	{ kEoB1ItemNames, kEoB1, kPlatformDOS, kNoSpecial, EN_ANY, &kEoB1ItemNamesDOSEnglishProvider },
+	{ kEoB1ItemNames, kEoB1, kPlatformDOS, kNoSpecial, DE_DEU, &kEoB1ItemNamesDOSEnglishProvider },
+	{ kEoB1ItemNames, kEoB1, kPlatformDOS, kNoSpecial, IT_ITA, &kEoB1ItemNamesDOSEnglishProvider },
+	{ kEoB1ItemNames, kEoB1, kPlatformDOS, kNoSpecial, ZH_TWN, &kEoB1ItemNamesDOSChineseProvider },
 	{ kEoB1Ascii2SjisTable1, kEoB1, kPlatformPC98, kNoSpecial, UNK_LANG, &kEoB1Ascii2SjisTable1PC98Provider },
 	{ kEoB1Ascii2SjisTable2, kEoB1, kPlatformPC98, kNoSpecial, UNK_LANG, &kEoB1Ascii2SjisTable2PC98Provider },
 	{ kEoB1FontLookupTable, kEoB1, kPlatformPC98, kNoSpecial, UNK_LANG, &kEoB1FontLookupTablePC98Provider },

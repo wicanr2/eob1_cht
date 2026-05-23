@@ -20,6 +20,7 @@
 /win64-build/game/*
 !/win64-build/game/KYRA.DAT
 !/win64-build/game/ceob.pat
+!/win64-build/game/TEXT.DAT
 !/win64-build/game/README.md
 !/win64-build/game/.gitkeep
 

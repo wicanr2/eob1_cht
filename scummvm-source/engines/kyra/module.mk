@@ -87,7 +87,8 @@ KYRARPG_COMMON_OBJ = \
 	gui/gui_rpg.o \
 	gui/saveload_rpg.o \
 	resource/staticres_rpg.o \
-	text/text_rpg.o
+	text/text_rpg.o \
+	text/zh_substitute_eob.o
 
 ifdef ENABLE_LOL
 MODULE_OBJS += \

@@ -1471,6 +1471,7 @@ const int eob1FloppyNeed[] = {
 
 	kEoB1MainMenuStrings,
 	kEoB1BonusStrings,
+	kEoB1ItemNames,  // Fix J (iter7): unblock 物品名中文 — DOS providers added per-lang in resources.cpp
 
 	kEoB1IntroFilesOpening,
 	kEoB1IntroFilesTower,

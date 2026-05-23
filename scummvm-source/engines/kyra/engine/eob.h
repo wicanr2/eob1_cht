@@ -245,6 +245,7 @@ private:
 	uint16 *_tempPattern;
 
 	static const KyraRpgGUISettings _guiSettingsVGA;
+	static const KyraRpgGUISettings _guiSettingsVGA_ZH;  // Fix I: in-game stats page layout for ZH_TWN
 	static const KyraRpgGUISettings _guiSettingsEGA;
 	static const KyraRpgGUISettings _guiSettingsPC98;
 	static const KyraRpgGUISettings _guiSettingsAmiga;

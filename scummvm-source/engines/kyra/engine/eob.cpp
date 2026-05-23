@@ -1283,6 +1283,8 @@ const KyraRpgGUISettings *EoBEngine::guiSettings() const {
 		return &_guiSettingsPC98;
 	else if (_flags.platform == Common::kPlatformSegaCD)
 		return &_guiSettingsSegaCD;
+	else if (_flags.lang == Common::ZH_TWN)
+		return &_guiSettingsVGA_ZH;  // Fix I: in-game stats page 2-col layout (mirrors EOB2 ZH)
 	else
 		return &_guiSettingsVGA;
 }
