@@ -15,8 +15,8 @@
 !/win64-build/KYRA.DAT
 !/win64-build/ceob.pat
 
-# Test/review outputs (gitignored, regenerated each run)
-/test-reports/*.png
+# Test screenshots ARE committed — they're evidence of the bug-fix loop
+# (don't ignore /test-reports/**/*.png)
 
 # Python cache
 __pycache__/

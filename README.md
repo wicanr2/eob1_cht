@@ -39,10 +39,18 @@ eob1_cht/
 │   ├── game-tester.md
 │   ├── ux-designer.md
 │   └── developer.md
+├── test-reports/                Game-tester agent 產出 + 截圖
+│   ├── report-iter1-baseline.md
+│   ├── report-iter2-verify.md
+│   └── screenshots/             iter1-XX / iter2-XX PNG
+├── design-reviews/              UX-designer agent 產出
+│   ├── review-iter1.md
+│   └── applied-iter1.md         developer agent handback
 └── docs/
     ├── architecture.md          ScummVM CHT 架構解析
     ├── future-work.md           還沒做的（IME, 物品名等）
-    └── pitfalls.md              踩過的雷
+    ├── pitfalls.md              踩過的雷
+    └── project_eob1_cht.md      原 EXE patch 路線記錄 (from claude memory)
 ```
 
 ## 快速開始 (玩遊戲)
@@ -86,6 +94,15 @@ wsl bash wsl-scripts/wsl_package_win.sh      # 複製到 Windows
 | `devtools/create_kyradat/resources/eob1_dos_chinese.h` | NEW 89 個 string provider，416/446 = 93% 覆蓋 |
 
 Upstream branch: https://github.com/wicanr2/scummvm/tree/eob1-cht-fan-translation
+
+## 這個 repo 在哪
+
+https://github.com/wicanr2/eob1_cht
+
+clone:
+```bash
+git clone https://github.com/wicanr2/eob1_cht.git
+```
 
 ## 字模
 
